@@ -1,40 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  int lastNumber = 4;
+  List<int> callList = [];
+  List<int> queueList = [1, 2, 3, 4];
+
+  void onClicked () {
+    setState(() {
+      lastNumber = lastNumber + 1;
+      queueList.add(lastNumber);
+      if(callList.length >= 8) {
+        callList.removeAt(0);
+      }
+      callList.add(queueList[0]);
+      queueList.removeAt(0);
+      print('$callList, $queueList');
+    });
+  }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context){
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 18, horizontal: 32),
-      decoration: BoxDecoration(color: Color(0xff121126)),
-      child: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.only(bottom: 20),
-            width: MediaQuery.of(context).size.width,
-            child: Row(
-              textDirection: TextDirection.ltr,
-              children: const [
-                CallNumbers(),
-                QueueNumbers()
-              ]
-            )
-            // child: Text("Container1"),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.6,
-            child: AdvertisementImage()
-          ),
-        ],
-      )
+    return MaterialApp(
+      home: Scaffold(
+        body: Container(
+          padding: EdgeInsets.symmetric(vertical: 18, horizontal: 32),
+          decoration: BoxDecoration(color: Color(0xff121126)),
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.only(bottom: 20),
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  textDirection: TextDirection.ltr,
+                  children: [
+                    CallNumbers(callList: callList),
+                    QueueNumbers(queueList: queueList),
+                    IconButton(
+                      iconSize: 40,
+                      color: Colors.pink,
+                      onPressed: onClicked,
+                      icon: Icon(Icons.add_box_rounded)
+                    )
+                  ]
+                )
+                // child: Text("Container1"),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: AdvertisementImage()
+              ),
+            ],
+          )
+        )
+      ) 
     );
   }
 }
@@ -49,7 +81,12 @@ class AdvertisementImage extends StatelessWidget {
 }
 
 class CallNumbers extends StatelessWidget {
-  const CallNumbers({ Key? key }) : super(key: key);
+  const CallNumbers({
+    Key? key,
+    required this.callList
+   }) : super(key: key);
+
+  final List<int> callList;
 
   @override
   Widget build(BuildContext context){
@@ -75,23 +112,7 @@ class CallNumbers extends StatelessWidget {
             textDirection: TextDirection.ltr,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.max,
-            children: const [
-              CallNumberItem(number: 20, lastPhoneNumber: 1234),
-              CallNumberItem(number: 20, lastPhoneNumber: 1234),
-              CallNumberItem(number: 20, lastPhoneNumber: 1234),
-              CallNumberItem(number: 20, lastPhoneNumber: 1234)
-            ],
-          ),
-          Row(
-            textDirection: TextDirection.ltr,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children: const [
-              CallNumberItem(number: 20, lastPhoneNumber: 1234),
-              CallNumberItem(number: 20, lastPhoneNumber: 1234),
-              CallNumberItem(number: 20, lastPhoneNumber: 1234),
-              CallNumberItem(number: 20, lastPhoneNumber: 1234)
-            ],
+            children: [for(var i = 0; i < 8; i++) CallNumberItem(number: callList.length > i ? callList[i] : 0, lastPhoneNumber: 1234)],
           )
         ]
       )
@@ -106,7 +127,7 @@ class CallNumberItem extends StatelessWidget {
     required this.lastPhoneNumber
   }) : super(key: key);
 
-  final double number;
+  final int number;
   final int lastPhoneNumber;
 
   @override
@@ -119,7 +140,7 @@ class CallNumberItem extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              '$number',
+              number == 0 ? '' : '$number',
               textDirection: TextDirection.ltr,
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -129,7 +150,7 @@ class CallNumberItem extends StatelessWidget {
               )
             ),
             Text(
-              '$lastPhoneNumber',
+              number == 0 ? '' : '$lastPhoneNumber',
               textDirection: TextDirection.ltr,
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -145,7 +166,12 @@ class CallNumberItem extends StatelessWidget {
 }
 
 class QueueNumbers extends StatelessWidget {
-const QueueNumbers({ Key? key }) : super(key: key);
+  const QueueNumbers({
+    Key? key,
+    required this.queueList
+  }) : super(key: key);
+
+  final List<int> queueList;
 
   @override
   Widget build(BuildContext context){
@@ -167,12 +193,7 @@ const QueueNumbers({ Key? key }) : super(key: key);
             ),
           ),
           Column(
-            children: const [
-              QueueNumberItem(number: 3333),
-              QueueNumberItem(number: 3334),
-              QueueNumberItem(number: 3335),
-              QueueNumberItem(number: 3336)
-            ],
+            children: [for(var n in queueList) QueueNumberItem(number: n)]
           ),
         ]
       )
