@@ -13,6 +13,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
+  String storeName = '네모네모의 철판 대창 볶음';
   int lastNumber = 4;
   List<int> callList = [];
   List<int> queueList = [1, 2, 3, 4];
@@ -36,33 +37,81 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         body: Container(
-          padding: EdgeInsets.symmetric(vertical: 18, horizontal: 32),
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 31),
           decoration: BoxDecoration(color: Color(0xff121126)),
           child: Column(
             children: [
               Container(
-                margin: EdgeInsets.only(bottom: 20),
-                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.only(bottom: 23),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   textDirection: TextDirection.ltr,
                   children: [
+                    Text(
+                      storeName,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28
+                      )),
+                    Text(
+                      '02:24',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28
+                      )
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.only(bottom: 20),
+                child: Stack(
+                  // textDirection: TextDirection.ltr,
+                  children: [
                     CallNumbers(callList: callList),
-                    QueueNumbers(queueList: queueList),
-                    IconButton(
-                      iconSize: 40,
-                      color: Colors.pink,
-                      onPressed: onClicked,
-                      icon: Icon(Icons.add_box_rounded)
+                    Positioned(
+                      right: 0,
+                      child: QueueNumbers(queueList: queueList),
+                    ),
+                    Positioned(
+                      left: 30.0,
+                      bottom: 30.0,
+                      child: IconButton(
+                        iconSize: 40,
+                        color: Colors.indigo,
+                        onPressed: onClicked,
+                        icon: Icon(Icons.add_box_rounded)
+                      ),
                     )
                   ]
                 )
-                // child: Text("Container1"),
+              ),
+              SizedBox(
+                child: AdvertisementImage()
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.6,
-                child: AdvertisementImage()
-              ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  textDirection: TextDirection.ltr,
+                  children: const [
+                    Text(
+                      '제휴문의: 02-552-9045 / 1899-9195',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 21
+                      )),
+                    Text(
+                      'ver 02.24',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 21
+                      )
+                    )
+                  ],
+                ),
+              )
             ],
           )
         )
@@ -76,7 +125,12 @@ class AdvertisementImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context){
-    return Image.asset('assets/advertisement.png', fit: BoxFit.fill);
+    return Image.asset(
+      'assets/advertisement.png', 
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height - 574,
+      fit: BoxFit.cover,
+    );
   }
 }
 
@@ -91,15 +145,17 @@ class CallNumbers extends StatelessWidget {
   @override
   Widget build(BuildContext context){
     return Container(
+      width: 186 * 4,
       margin: EdgeInsets.only(right: 20),
-      width: MediaQuery.of(context).size.width * 0.5,
       child: Column(
         children: [
           Container(
-            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+              color: Color(0xffFF4C32),
+            ),
             height: 100,
             alignment: Alignment.center,
-            color: Color(0xffFF4C32),
             child: Text('입장 안내',
               textDirection: TextDirection.ltr,
               style: TextStyle(
@@ -112,7 +168,13 @@ class CallNumbers extends StatelessWidget {
             textDirection: TextDirection.ltr,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.max,
-            children: [for(var i = 0; i < 8; i++) CallNumberItem(number: callList.length > i ? callList[i] : 0, lastPhoneNumber: 1234)],
+            children: [for(var i = 0; i < 4; i++) CallNumberItem(number: callList.length > i ? callList[i] : 0, lastPhoneNumber: 1234)],
+          ),
+          Row(
+            textDirection: TextDirection.ltr,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            children: [for(var i = 0; i < 4; i++) CallNumberItem(number: callList.length > i+4 ? callList[i+4] : 0, lastPhoneNumber: 1234)],
           )
         ]
       )
@@ -132,35 +194,34 @@ class CallNumberItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context){
-    return Flexible(
-      fit: FlexFit.tight,
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 20),
-        color: Color(0xfff3f3f3),
-        child: Column(
-          children: [
-            Text(
-              number == 0 ? '' : '$number',
-              textDirection: TextDirection.ltr,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xffF85A40),
-                fontSize: 60,
-                fontWeight: FontWeight.w800
-              )
-            ),
-            Text(
-              number == 0 ? '' : '$lastPhoneNumber',
-              textDirection: TextDirection.ltr,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 30
-              )
-            ),
-          ]
-        ),
-      )
+    return Container(
+      width: 186,
+      height: 166,
+      padding: EdgeInsets.symmetric(vertical: 20),
+      color: Color(0xfff3f3f3),
+      child: Column(
+        children: [
+          Text(
+            number == 0 ? '' : '$number',
+            textDirection: TextDirection.ltr,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Color(0xffF85A40),
+              fontSize: 60,
+              fontWeight: FontWeight.w800
+            )
+          ),
+          Text(
+            number == 0 ? '' : '$lastPhoneNumber',
+            textDirection: TextDirection.ltr,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 30
+            )
+          ),
+        ]
+      ),
     );
   }
 }
@@ -176,19 +237,19 @@ class QueueNumbers extends StatelessWidget {
   @override
   Widget build(BuildContext context){
     return Container(
-      width: MediaQuery.of(context).size.width * 0.4,
+      width: 256,
       color: Color(0xfff3f3f3),
       child: Column(
         children: [
           Container(
-            width: MediaQuery.of(context).size.width,
             height: 100,
             alignment: Alignment.center,
             color: Colors.white,
             child: Text('대기 목록',
               textDirection: TextDirection.ltr,
               style: TextStyle(
-                fontSize: 45
+                fontSize: 45,
+                fontWeight: FontWeight.w700
               )
             ),
           ),
