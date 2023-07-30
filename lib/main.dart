@@ -15,7 +15,7 @@ class _MyAppState extends State<MyApp> {
 
   String storeName = '네모네모의 철판 대창 볶음';
   int lastNumber = 4;
-  List<int> callList = [];
+  List<int> callList = [5,6,7,8,9];
   List<int> queueList = [1, 2, 3, 4];
 
   void onClicked () {
@@ -27,7 +27,6 @@ class _MyAppState extends State<MyApp> {
       }
       callList.add(queueList[0]);
       queueList.removeAt(0);
-      print('$callList, $queueList');
     });
   }
 
@@ -66,24 +65,10 @@ class _MyAppState extends State<MyApp> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 margin: EdgeInsets.only(bottom: 20),
-                child: Stack(
-                  // textDirection: TextDirection.ltr,
+                child: Row(
                   children: [
                     CallNumbers(callList: callList),
-                    Positioned(
-                      right: 0,
-                      child: QueueNumbers(queueList: queueList),
-                    ),
-                    Positioned(
-                      left: 30.0,
-                      bottom: 30.0,
-                      child: IconButton(
-                        iconSize: 40,
-                        color: Colors.indigo,
-                        onPressed: onClicked,
-                        icon: Icon(Icons.add_box_rounded)
-                      ),
-                    )
+                    QueueNumbers(queueList: queueList)
                   ]
                 )
               ),
@@ -144,40 +129,44 @@ class CallNumbers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context){
-    return Container(
-      width: 186 * 4,
-      margin: EdgeInsets.only(right: 20),
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
-              color: Color(0xffFF4C32),
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.only(right: 20),
+        constraints: BoxConstraints(
+          minWidth: 600,    
+        ),
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+                color: Color(0xffFF4C32),
+              ),
+              height: 100,
+              alignment: Alignment.center,
+              child: Text('입장 안내',
+                textDirection: TextDirection.ltr,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 45
+                )
+              ),
             ),
-            height: 100,
-            alignment: Alignment.center,
-            child: Text('입장 안내',
+            Row(
               textDirection: TextDirection.ltr,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 45
-              )
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              children: [for(var i = 0; i < 4; i++) CallNumberItem(number: callList.length > i ? callList[i] : 0, lastPhoneNumber: 1234)],
             ),
-          ),
-          Row(
-            textDirection: TextDirection.ltr,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children: [for(var i = 0; i < 4; i++) CallNumberItem(number: callList.length > i ? callList[i] : 0, lastPhoneNumber: 1234)],
-          ),
-          Row(
-            textDirection: TextDirection.ltr,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children: [for(var i = 0; i < 4; i++) CallNumberItem(number: callList.length > i+4 ? callList[i+4] : 0, lastPhoneNumber: 1234)],
-          )
-        ]
-      )
+            Row(
+              textDirection: TextDirection.ltr,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              children: [for(var i = 0; i < 4; i++) CallNumberItem(number: callList.length > i+4 ? callList[i+4] : 0, lastPhoneNumber: 1234)],
+            )
+          ]
+        )
+      ),
     );
   }
 }
@@ -194,33 +183,34 @@ class CallNumberItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context){
-    return Container(
-      width: 186,
-      height: 166,
-      padding: EdgeInsets.symmetric(vertical: 20),
-      color: Color(0xfff3f3f3),
-      child: Column(
-        children: [
-          Text(
-            number == 0 ? '' : '$number',
-            textDirection: TextDirection.ltr,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0xffF85A40),
-              fontSize: 60,
-              fontWeight: FontWeight.w800
-            )
-          ),
-          Text(
-            number == 0 ? '' : '$lastPhoneNumber',
-            textDirection: TextDirection.ltr,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 30
-            )
-          ),
-        ]
+    return Expanded(
+      child: Container(
+        height: 166,
+        padding: EdgeInsets.symmetric(vertical: 20),
+        color: Color(0xfff3f3f3),
+        child: Column(
+          children: [
+            Text(
+              number == 0 ? '' : '$number',
+              textDirection: TextDirection.ltr,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Color(0xffF85A40),
+                fontSize: 60,
+                fontWeight: FontWeight.w800
+              )
+            ),
+            Text(
+              number == 0 ? '' : '$lastPhoneNumber',
+              textDirection: TextDirection.ltr,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 30
+              )
+            ),
+          ]
+        ),
       ),
     );
   }
