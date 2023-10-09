@@ -1,0 +1,18 @@
+version: 1
+frontend:
+  phases:
+    preBuild: 
+        commands: 
+            - git clone https://github.com/flutter/flutter.git -b stable
+            - echo PATH="$PATH:`pwd`/flutter/bin" >> ~/.profile
+            - source ~/.profile
+    # IMPORTANT - Please verify your build commands
+    build:
+      commands: ['flutter build web --no-tree-shake-icons']
+  artifacts:
+    # IMPORTANT - Please verify your build output directory
+    baseDirectory: ./build/web
+    files:
+      - '**/*'
+  cache:
+    paths: []
